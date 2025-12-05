@@ -3,13 +3,19 @@ import '../styles/global.css';
 import { siteConfig } from '../data/siteData';
 import StarField from '../components/StarField.astro';
 import vaderIcon from '../images/darthvadericon.png.png';
+import ogDefault from '../images/portfolio.png';
 
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title = siteConfig.name, description = siteConfig.description } = Astro.props;
+const {
+  title = siteConfig.name,
+  description = siteConfig.description,
+  ogImage = ogDefault?.src ?? ogDefault,
+} = Astro.props;
 const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
 ---
 
@@ -21,6 +27,14 @@ const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
     <link rel="icon" type="image/png" href={vaderIconSrc} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
