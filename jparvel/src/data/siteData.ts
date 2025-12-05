@@ -13,7 +13,7 @@ export const siteConfig = {
   address: "Una galaxia muy, muy lejana",
   social: {
     github: "https://github.com/JavierParedes",
-    linkedin: "https://https://www.linkedin.com/in/javier-paredes-vela-3a2233b4",
+    linkedin: "https://www.linkedin.com/in/javier-paredes-vela-3a2233b4",
   },
 };
 
