@@ -9,11 +9,11 @@ const resolveHref = (href: string) =>
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-sw-yellow/20">
-  <nav class="container py-4">
+  <nav class="container py-4 px-4 md:px-6">
     <div class="flex items-center justify-between">
-      <a href="#home" class="flex items-center gap-3 group">
-        <img src={vaderIconSrc} alt="Darth Vader icon" class="w-14 h-14 md:w-16 md:h-16 drop-shadow-[0_0_8px_rgba(255,232,31,0.5)]" loading="lazy" />
-        <span class="font-bold text-lg md:text-xl text-sw-yellow tracking-wider text-glow-yellow">{siteConfig.name}</span>
+      <a href="#home" class="flex items-center gap-2 md:gap-3 group">
+        <img src={vaderIconSrc} alt="Darth Vader icon" class="w-12 h-12 md:w-16 md:h-16 drop-shadow-[0_0_8px_rgba(255,232,31,0.5)]" loading="lazy" />
+        <span class="font-bold text-base md:text-xl text-sw-yellow tracking-wider text-glow-yellow">{siteConfig.name}</span>
       </a>
 
       <div class="hidden lg:flex items-center gap-2">

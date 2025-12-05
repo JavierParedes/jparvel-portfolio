@@ -25,16 +25,15 @@ import heroAvatar from '../images/jparvel.png';
     <span class="floating-letter absolute text-sw-yellow/20 text-2xl font-mono" style="top: 25%; right: 15%; animation-delay: 0.8s;">✦</span>
   </div>
 
-  <div class="container py-20 relative z-10">
+  <div class="w-full max-w-7xl mx-auto py-20 px-4 md:px-6 relative z-10">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <!-- Left content -->
       <div class="text-center lg:text-left">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-wider uppercase">
-          <span class="text-sw-yellow text-glow-yellow">{heroData.titleHighlight}</span>
-          <br />
-          <span class="text-white">{heroData.titleMain}</span>
+        <h1 class="text-[1.6rem] sm:text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-wide sm:tracking-wider uppercase">
+          <span class="text-sw-yellow text-glow-yellow block">{heroData.titleHighlight}</span>
+          <span class="text-white block">{heroData.titleMain}</span>
         </h1>
-        <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-xl leading-relaxed mx-auto lg:mx-0">
+        <p class="text-gray-400 text-base sm:text-lg md:text-xl mb-10 leading-relaxed mx-auto lg:mx-0 max-w-xl">
           {heroData.subtitle}
         </p>
 
