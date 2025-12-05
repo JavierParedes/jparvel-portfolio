@@ -1,0 +1,349 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  /* Star Wars color palette - Black & Gold theme */
+  --color-sw-yellow: #FFE81F;
+  --color-sw-gold: #FFC500;
+  --color-sw-dark: #000000;
+  --color-sw-space: #0a0e27;
+  --color-sw-gray: #1a1f3a;
+  --color-sw-light-gray: #8B8B8B;
+  --font-family-inter: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-family-inter);
+  background-color: var(--color-sw-dark);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Star Wars themed text glow */
+.text-glow-yellow {
+  text-shadow: 0 0 10px rgba(255, 232, 31, 0.8), 0 0 20px rgba(255, 232, 31, 0.5);
+}
+
+/* Star Wars themed headings */
+h1, h2, h3 {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Special title styles - Star Wars themed */
+.title-special {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 232, 31, 0.1) 20%, rgba(255, 232, 31, 0.1) 80%, transparent 100%);
+  border-left: 3px solid var(--color-sw-yellow);
+  border-right: 3px solid var(--color-sw-yellow);
+  text-shadow: 0 0 20px rgba(255, 232, 31, 0.5);
+}
+
+.title-special::before,
+.title-special::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 2px;
+  background: var(--color-sw-yellow);
+  box-shadow: 0 0 10px rgba(255, 232, 31, 0.8);
+}
+
+.title-special::before {
+  top: 0;
+  left: -40px;
+}
+
+.title-special::after {
+  top: 0;
+  right: -40px;
+}
+
+/* Subtitle with corner accents */
+.subtitle-accent {
+  position: relative;
+  display: inline-block;
+  padding: 0.75rem 2rem;
+}
+
+.subtitle-accent::before,
+.subtitle-accent::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-sw-yellow);
+}
+
+.subtitle-accent::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.subtitle-accent::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+/* Section title with animated underline */
+.title-underline {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 1rem;
+}
+
+.title-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-sw-yellow), transparent);
+  box-shadow: 0 0 10px rgba(255, 232, 31, 0.8);
+  animation: titleUnderline 1.5s ease-out forwards;
+}
+
+@keyframes titleUnderline {
+  to {
+    width: 120%;
+  }
+}
+
+/* Glitch text effect for dramatic titles */
+.title-glitch {
+  position: relative;
+  text-shadow:
+    0 0 10px rgba(255, 232, 31, 0.8),
+    2px 2px 0 rgba(255, 232, 31, 0.3),
+    -2px -2px 0 rgba(255, 197, 0, 0.3);
+}
+
+/* Hologram title effect */
+.title-hologram {
+  position: relative;
+  color: var(--color-sw-yellow);
+  text-shadow:
+    0 0 5px rgba(255, 232, 31, 0.8),
+    0 0 10px rgba(255, 232, 31, 0.6),
+    0 0 20px rgba(255, 232, 31, 0.4);
+  animation: hologramFlicker 3s ease-in-out infinite;
+}
+
+@keyframes hologramFlicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+  }
+  75% {
+    opacity: 0.98;
+  }
+}
+
+/* Container with max-width and centered */
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+/* Floating letters animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 0.6;
+  }
+}
+
+.floating-letter {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Glow effect - Star Wars yellow/gold */
+.glow-yellow {
+  box-shadow: 0 0 20px rgba(255, 232, 31, 0.5), 0 0 40px rgba(255, 232, 31, 0.3);
+}
+
+.glow-yellow-strong {
+  box-shadow: 0 0 30px rgba(255, 232, 31, 0.8), 0 0 60px rgba(255, 232, 31, 0.5);
+}
+
+/* Progress bar animation */
+@keyframes progressPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.progress-animated {
+  position: relative;
+  animation: progressPulse 2s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.progress-animated::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: progressShine 1.6s linear infinite;
+}
+
+@keyframes progressShine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.progress-fill {
+  width: var(--target, 0%);
+  animation: progressFill 1.6s ease-out forwards;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target, 0%);
+  }
+}
+
+/* Radial glow backgrounds - Star Wars themed */
+.space-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(255, 232, 31, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(255, 232, 31, 0.03) 0%, transparent 70%);
+}
+
+/* Hexagon button style */
+.btn-hex {
+  position: relative;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+}
+
+/* Border glow animation - Star Wars yellow */
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(255, 232, 31, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 232, 31, 1);
+  }
+}
+
+.border-glow {
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* Lightsaber border effect */
+.lightsaber-border {
+  border: 2px solid var(--color-sw-yellow);
+  box-shadow:
+    inset 0 0 10px rgba(255, 232, 31, 0.4),
+    0 0 10px rgba(255, 232, 31, 0.4);
+}
+
+/* Section backgrounds with subtle glow */
+section {
+  position: relative;
+}
+
+/* Glow orbs for sections - Star Wars themed */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glow-orb-yellow {
+  background: rgba(255, 232, 31, 0.15);
+}
+
+.glow-orb-gold {
+  background: rgba(255, 197, 0, 0.1);
+}
+
+/* Mobile touch feedback - Enhanced visibility */
+/* CRITICAL: Mobile devices don't have hover, only touch events */
+@media (hover: none) and (pointer: coarse) {
+  /* Custom tap highlight color - visible yellow flash on tap */
+  * {
+    -webkit-tap-highlight-color: rgba(255, 232, 31, 0.5) !important;
+  }
+
+  /* Universal touch feedback for all clickable elements */
+  a,
+  button {
+    -webkit-tap-highlight-color: rgba(255, 232, 31, 0.5) !important;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  a:active,
+  button:active {
+    opacity: 0.6 !important;
+    transform: scale(0.92) !important;
+    transition: all 0.05s ease-out !important;
+  }
+
+  /* Primary yellow buttons - turn gold and darken when pressed */
+  .bg-sw-yellow:active {
+    background-color: #D4A017 !important;
+    box-shadow: 0 0 20px rgba(255, 232, 31, 0.8) !important;
+  }
+
+  /* Secondary buttons with border - fill with yellow when pressed */
+  .border-sw-yellow:active,
+  .border-2:active {
+    background-color: rgba(255, 232, 31, 0.4) !important;
+    border-color: #FFE81F !important;
+  }
+
+  /* Navigation menu items - yellow background on tap */
+  nav a:active {
+    background-color: rgba(255, 232, 31, 0.3) !important;
+    color: #FFE81F !important;
+  }
+
+  /* Social icons and SVG elements - shrink on tap */
+  a svg:active {
+    transform: scale(0.8) !important;
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 232, 31, 0.8)) !important;
+  }
+
+  /* Submit button specific styling */
+  button[type="submit"]:active {
+    background-color: #D4A017 !important;
+    transform: scale(0.96) !important;
+  }
+}

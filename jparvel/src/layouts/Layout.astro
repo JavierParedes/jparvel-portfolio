@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import { siteConfig } from '../data/siteData';
+import StarField from '../components/StarField.astro';
+import vaderIcon from '../images/darthvadericon.png.png';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = siteConfig.name, description = siteConfig.description } = Astro.props;
+const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href={vaderIconSrc} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="antialiased bg-black text-white overflow-x-hidden">
+    <!-- Star Wars starfield background -->
+    <StarField />
+
+    <!-- Main content with z-index above starfield -->
+    <div class="relative z-10 snap-container">
+      <slot />
+    </div>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+      }
+
+      body {
+        overflow-y: scroll;
+        overflow-x: hidden;
+      }
+
+      .snap-container section {
+        scroll-snap-align: start;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+      }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('main > section');
+        let ticking = false;
+
+        function updateParallax() {
+          sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const elementCenter = rect.top + rect.height / 2;
+            const windowCenter = windowHeight / 2;
+
+            // Calculate distance from center (-1 to 1)
+            const distanceFromCenter = (windowCenter - elementCenter) / windowHeight;
+
+            // Apply stronger parallax effect (increased from 20 to 80)
+            const parallaxOffset = distanceFromCenter * 80;
+
+            // Apply scale effect for more depth
+            const scale = 1 - Math.abs(distanceFromCenter) * 0.1;
+
+            (section as HTMLElement).style.transform = `translateY(${parallaxOffset}px) scale(${scale})`;
+            (section as HTMLElement).style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+          });
+
+          ticking = false;
+        }
+
+        function onScroll() {
+          if (!ticking) {
+            window.requestAnimationFrame(updateParallax);
+            ticking = true;
+          }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Initial call
+        updateParallax();
+      });
+    </script>
+  </body>
+</html>

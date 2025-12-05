@@ -1,0 +1,87 @@
+---
+import { aboutData, aboutCodeCard } from '../data/siteData';
+
+const specialtiesList = aboutCodeCard.specialties.join('", "');
+const industriesList = aboutCodeCard.industries.join('", "');
+---
+
+<section id="about" class="py-24 bg-transparent relative overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 uppercase tracking-wider title-underline">{aboutData.title}</h2>
+      <p class="text-xl text-sw-yellow font-medium text-glow-yellow subtitle-accent">{aboutData.subtitle}</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <div class="p-4 md:p-6 bg-sw-yellow/20 backdrop-blur-sm rounded-lg border border-sw-yellow/30 shadow-[0_0_16px_rgba(255,232,31,0.3)] overflow-hidden">
+        <p class="text-xs uppercase tracking-[0.2em] text-sw-yellow font-bold mb-4">about.js</p>
+        <pre class="text-xs md:text-sm font-mono leading-6 md:leading-7 text-gray-200 whitespace-pre overflow-x-auto">
+<span class="text-sw-yellow font-bold">const</span> about = {"{"}
+{`\n  name: "${aboutCodeCard.name}",`}
+{`\n  role: "${aboutCodeCard.role}",`}
+{`\n  founded: ${aboutCodeCard.founded},`}
+{`\n  headquarters: "${aboutCodeCard.headquarters}",`}
+{`\n  specialties: ["${specialtiesList}"],`}
+{`\n  industries: ["${industriesList}"],`}
+{"};"}
+        </pre>
+      </div>
+
+      <div class="text-center lg:text-left">
+        <h3 class="text-xl font-semibold text-white mb-4 uppercase tracking-wide title-special">Nuestra Mision</h3>
+        <p class="text-gray-300 mb-8 leading-relaxed">{aboutData.mission}</p>
+
+        <h3 class="text-xl font-semibold text-white mb-6 uppercase tracking-wide title-special">Competencias Clave</h3>
+        <div class="space-y-6 mb-6">
+          {aboutData.skills.map((skill) => (
+            <div class="p-4 bg-sw-yellow/20 backdrop-blur-sm rounded border border-sw-yellow/30">
+              <div class="flex justify-between mb-2">
+                <span class="font-bold text-sw-yellow uppercase text-sm">{skill.name}</span>
+                <span class="text-sw-yellow font-bold">{skill.percentage}%</span>
+              </div>
+              <div class="h-2 bg-black/40 rounded-full overflow-hidden border border-sw-yellow/20">
+                <div
+                  class="h-full bg-sw-yellow rounded-full skill-bar shadow-[0_0_12px_rgba(255,232,31,0.6)]"
+                  style={`width: ${skill.percentage}%`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+          {[...aboutCodeCard.specialties, ...aboutCodeCard.industries].map((tag) => (
+            <span class="px-4 py-2 rounded-full bg-sw-yellow/20 backdrop-blur-sm text-sw-yellow text-sm font-bold border border-sw-yellow/30">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-16 border-t border-sw-yellow/30">
+      {aboutData.stats.map((stat) => (
+        <div class="text-center group">
+          <p class="text-4xl md:text-5xl font-bold text-sw-yellow mb-2 text-glow-yellow group-hover:scale-110 transition-transform duration-300">{stat.value}</p>
+          <p class="text-gray-400 uppercase text-sm tracking-wide">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skill-bar {
+    animation: skillFill 1.5s ease-out forwards;
+    transform-origin: left;
+  }
+
+  @keyframes skillFill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+</style>

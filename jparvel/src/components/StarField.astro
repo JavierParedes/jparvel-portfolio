@@ -1,0 +1,183 @@
+---
+// Star Wars style animated starfield background
+---
+
+<div id="starfield" class="fixed inset-0 z-0 overflow-hidden bg-black">
+  <canvas id="stars-canvas"></canvas>
+</div>
+
+<style>
+  #starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+    background-color: #000000;
+  }
+
+  #stars-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Force hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('stars-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  // Star configuration
+  interface Star {
+    x: number;
+    y: number;
+    z: number;
+    size: number;
+  }
+
+  let stars: Star[] = [];
+  // Adjust star count for mobile
+  const isMobile = window.innerWidth < 768;
+  const numStars = isMobile ? 200 : 800; // Fewer stars on mobile for better performance
+  const speed = isMobile ? 2.0 : 2.5; // Faster hyperspace effect
+
+  // Initialize stars
+  function initStars() {
+    stars = [];
+    const width = canvas.width || window.innerWidth;
+    const height = canvas.height || window.innerHeight;
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * width - width / 2,
+        y: Math.random() * height - height / 2,
+        z: Math.random() * width,
+        size: Math.random() * 1.8 + 0.3, // Varied sizes
+      });
+    }
+  }
+
+  // Set canvas size with device pixel ratio support
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+
+    // Scale context for sharp rendering
+    ctx.scale(dpr, dpr);
+
+    // Enable image smoothing for better rendering on mobile
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Reinitialize stars after resize to match new dimensions
+    initStars();
+
+    // Debug log for mobile
+    if (isMobile) {
+      console.log('StarField Mobile Init:', { width, height, dpr, numStars });
+    }
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Animation loop
+  function animate() {
+    // Balanced fade for proper trail effect
+    ctx.fillStyle = isMobile ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.15)';
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    stars.forEach((star) => {
+      // Move star forward (hyperspace effect)
+      star.z -= speed;
+
+      // Reset star if it goes past the screen
+      if (star.z <= 0) {
+        star.x = Math.random() * window.innerWidth - window.innerWidth / 2;
+        star.y = Math.random() * window.innerHeight - window.innerHeight / 2;
+        star.z = window.innerWidth;
+      }
+
+      // Project 3D position to 2D
+      const k = 128.0 / star.z;
+      const px = star.x * k + centerX;
+      const py = star.y * k + centerY;
+
+      // Calculate star size and opacity based on depth
+      // Smaller stars for both mobile and desktop
+      const sizeFactor = isMobile ? 2.5 : 2;
+      const size = Math.max((1 - star.z / window.innerWidth) * star.size * sizeFactor, 0.1);
+      // Slightly brighter on mobile
+      const opacityFactor = isMobile ? 1.5 : 1;
+      const opacity = Math.max(0, Math.min((1 - star.z / window.innerWidth) * opacityFactor, 1));
+
+      // Skip stars outside viewport or with invalid size
+      if (size <= 0 || px < -size || px > window.innerWidth + size || py < -size || py > window.innerHeight + size) {
+        return;
+      }
+
+      // Draw star with bright white color (Star Wars style)
+      if (isMobile) {
+        // Mobile - simple solid circles
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        ctx.beginPath();
+        ctx.arc(px, py, size * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Desktop - gradient for prettier effect
+        const gradientSize = Math.max(size, 0.1);
+        const gradient = ctx.createRadialGradient(px, py, 0, px, py, gradientSize);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${opacity})`);
+        gradient.addColorStop(0.6, `rgba(255, 255, 255, ${opacity * 0.5})`);
+        gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(px, py, gradientSize * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Draw elongated star trail (Star Wars hyperspace style)
+      if (star.z < window.innerWidth / 1.5) {
+        const trailIntensity = (1 - star.z / window.innerWidth);
+        const prevZ = star.z + speed * 4;
+        const prevK = 128.0 / prevZ;
+        const prevPx = star.x * prevK + centerX;
+        const prevPy = star.y * prevK + centerY;
+
+        // Create gradient for trail
+        const trailGradient = ctx.createLinearGradient(px, py, prevPx, prevPy);
+        trailGradient.addColorStop(0, `rgba(255, 255, 255, ${opacity * 0.9})`);
+        trailGradient.addColorStop(0.5, `rgba(255, 255, 255, ${opacity * 0.4})`);
+        trailGradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+
+        ctx.strokeStyle = trailGradient;
+        ctx.lineWidth = size;
+        ctx.beginPath();
+        ctx.moveTo(prevPx, prevPy);
+        ctx.lineTo(px, py);
+        ctx.stroke();
+      }
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>

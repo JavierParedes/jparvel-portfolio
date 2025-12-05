@@ -1,0 +1,55 @@
+---
+import { servicesData } from '../data/siteData';
+import deathStar from '../images/Estrella de la Muerte.png';
+import robot from '../images/robot.png';
+import tormenta from '../images/tormenta.png';
+import sableSith from '../images/sable sith.png';
+
+const iconMap: Record<string, any> = {
+  "Frontend Development": deathStar,
+  "Backend Development": robot,
+  "UI/UX Design": tormenta,
+  "DevOps & Deployment": sableSith,
+};
+
+const yellowFilter =
+  "brightness(0) saturate(100%) invert(88%) sepia(75%) saturate(1258%) hue-rotate(358deg) brightness(104%) contrast(103%)";
+---
+
+<section id="services" class="py-24 bg-transparent relative overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 uppercase tracking-wider title-underline">{servicesData.title}</h2>
+      <p class="text-xl text-sw-yellow font-medium mb-4 text-glow-yellow subtitle-accent">{servicesData.subtitle}</p>
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto">{servicesData.description}</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {servicesData.services.map((service) => (
+        <div class="bg-sw-yellow/20 backdrop-blur-sm text-white rounded-lg p-6 border border-sw-yellow/30 shadow-[0_0_16px_rgba(255,232,31,0.3)] transition-all duration-300 group hover:-translate-y-2 hover:shadow-[0_0_24px_rgba(255,232,31,0.5)]">
+          <div class="w-14 h-14 bg-black/50 border border-sw-yellow/30 rounded-lg flex items-center justify-center mb-6 transition-all overflow-hidden">
+            <img
+              src={iconMap[service.title]?.src ?? iconMap[service.title]}
+              alt={service.title}
+              class="w-10 h-10 object-contain"
+              style={`filter: ${yellowFilter};`}
+              loading="lazy"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-sw-yellow mb-3 uppercase tracking-wide">{service.title}</h3>
+          <p class="text-gray-300 mb-6 text-sm leading-relaxed">{service.description}</p>
+          <ul class="space-y-2">
+            {service.features.map((feature) => (
+              <li class="flex items-center gap-2 text-sm text-gray-300 font-medium">
+                <svg class="w-4 h-4 text-sw-yellow flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
