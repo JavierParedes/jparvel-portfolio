@@ -72,8 +72,12 @@ const industriesList = aboutCodeCard.industries.join('", "');
 
 <style>
   .skill-bar {
-    animation: skillFill 1.5s ease-out forwards;
+    animation: none;
     transform-origin: left;
+  }
+
+  .skill-bar.animate-fill {
+    animation: skillFill 1.5s ease-out forwards;
   }
 
   @keyframes skillFill {

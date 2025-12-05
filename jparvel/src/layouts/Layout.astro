@@ -109,6 +109,22 @@ const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
 
         // Initial call
         updateParallax();
+
+        // Animar barras solo cuando entren en viewport
+        const animatedBars = document.querySelectorAll('.progress-animated, .progress-fill, .skill-bar');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('animate-progress');
+                entry.target.classList.add('animate-fill');
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+
+        animatedBars.forEach((el) => observer.observe(el));
       });
     </script>
   </body>

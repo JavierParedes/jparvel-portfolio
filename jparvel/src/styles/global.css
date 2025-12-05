@@ -202,6 +202,7 @@ h1, h2, h3 {
 .progress-animated {
   position: relative;
   animation: progressPulse 2s ease-in-out infinite;
+  animation-play-state: paused;
   overflow: hidden;
 }
 
@@ -212,6 +213,15 @@ h1, h2, h3 {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
   transform: translateX(-100%);
   animation: progressShine 1.6s linear infinite;
+  animation-play-state: paused;
+}
+
+.progress-animated.animate-progress {
+  animation-play-state: running;
+}
+
+.progress-animated.animate-progress::after {
+  animation-play-state: running;
 }
 
 @keyframes progressShine {
@@ -225,6 +235,10 @@ h1, h2, h3 {
 
 .progress-fill {
   width: var(--target, 0%);
+  animation: none;
+}
+
+.progress-fill.animate-fill {
   animation: progressFill 1.6s ease-out forwards;
 }
 
