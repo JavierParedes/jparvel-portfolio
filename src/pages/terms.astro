@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Términos | JPARVEL" description="Términos y condiciones de JPARVEL">
+  <Header />
+  <main class="min-h-screen bg-black text-white pt-28 pb-24">
+    <div class="container mx-auto px-6">
+      <h1 class="text-4xl md:text-5xl font-bold text-sw-yellow mb-6 uppercase tracking-wider">Términos y Condiciones</h1>
+      <p class="text-gray-300 mb-8 max-w-3xl">
+        Al usar este sitio aceptas las condiciones aquí descritas. Léelas con calma antes de continuar.
+      </p>
+
+      <div class="space-y-6 text-gray-300 max-w-4xl">
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Uso del sitio</h2>
+          <p>El contenido se ofrece “tal cual”, para fines informativos sobre mi perfil y servicios profesionales.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Propiedad intelectual</h2>
+          <p>Todo el material (textos, imágenes y diseño) pertenece a JPARVEL salvo donde se indique lo contrario.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Limitación de responsabilidad</h2>
+          <p>No me hago responsable de daños derivados del uso o la imposibilidad de uso del sitio.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Contacto</h2>
+          <p>Para dudas sobre estos términos, escríbeme a {`mailto:${"contact@jparvel.com"}`}</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

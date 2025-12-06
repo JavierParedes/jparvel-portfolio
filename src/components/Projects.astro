@@ -1,0 +1,101 @@
+---
+import { projectsData } from '../data/siteData';
+---
+
+<section id="projects" class="py-24 bg-transparent relative overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-bright mb-4 uppercase tracking-wider title-underline">{projectsData.title}</h2>
+      <p class="text-xl text-sw-yellow font-medium mb-4 text-glow-yellow subtitle-accent">{projectsData.subtitle}</p>
+      <p class="text-lg text-enhanced max-w-2xl mx-auto">{projectsData.description}</p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-4 mb-12">
+      {projectsData.categories.map((category) => (
+        <button
+          class="filter-btn px-6 py-2 border border-sw-yellow/30 font-medium transition-all duration-300 data-[active=true]:bg-sw-yellow data-[active=true]:text-black data-[active=true]:border-sw-yellow data-[active=true]:shadow-glow-yellow bg-transparent text-gray-400 hover:border-sw-yellow hover:text-sw-yellow uppercase text-sm tracking-wide"
+          data-category={category}
+          data-active={category === "Todas" ? "true" : "false"}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+      {projectsData.projects.map((project) => (
+        <div
+          class="project-card group bg-sw-yellow/20 backdrop-blur-sm rounded-lg overflow-hidden border border-sw-yellow/30 shadow-[0_0_16px_rgba(255,232,31,0.3)] hover:shadow-[0_0_24px_rgba(255,232,31,0.5)] transition-all duration-300"
+          data-category={project.category}
+        >
+          <div class="relative h-48 bg-black overflow-hidden">
+            <img
+              src={project.image?.src ?? project.image}
+              alt={project.title}
+              class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80"></div>
+            <div class="absolute top-4 left-4">
+              <span class="px-3 py-1 bg-sw-yellow border border-black/10 text-black font-bold text-sm uppercase tracking-wide">
+                {project.category}
+              </span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sw-yellow to-transparent shadow-glow-yellow"></div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-sw-yellow mb-2 uppercase tracking-wide">
+              {project.title}
+            </h3>
+            <p class="text-enhanced mb-4 text-sm">{project.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {project.technologies.map((tech) => (
+                <span class="px-2 py-1 bg-sw-yellow text-black font-bold text-xs">
+                  {tech}
+                </span>
+              ))}
+            </div>
+            {project.demoUrl && project.demoUrl !== "#" && (
+              <div class="mt-6">
+                <a
+                  href={project.demoUrl}
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-sw-yellow text-black font-bold uppercase text-xs tracking-wide rounded hover:bg-sw-gold transition-colors shadow-glow-yellow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Ver proyecto
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-category');
+
+      filterBtns.forEach(b => b.setAttribute('data-active', 'false'));
+      btn.setAttribute('data-active', 'true');
+
+      projectCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'All' || cardCategory === category) {
+          (card as HTMLElement).style.display = 'block';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
