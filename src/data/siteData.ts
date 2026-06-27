@@ -3,6 +3,7 @@
 import portfolioImg from '../images/portfolio.png';
 import naosImg from '../images/NAOS.png';
 import o2Img from '../images/O2.png';
+import franVelaImg from '../images/franciscovelaportfolio.png';
 
 export const siteConfig = {
   name: "JPARVEL",
@@ -161,6 +162,14 @@ export const projectsData = {
       image: o2Img,
       technologies: ["React.js", "Javascript", "Java / Springboot"],
       demoUrl: "https://bitboxonline.com/products",
+    },
+    {
+      title: "Portfolio Francisco Vela",
+      description: "Portfolio personal del preparador físico Francisco Vela, referente en el fútbol español con una extensa trayectoria en clubes profesionales. La web recoge su carrera, metodología de trabajo, servicios de mentoría para entrenadores y profesionales del deporte, y un espacio donde compartir su conocimiento sobre el rendimiento físico en el fútbol de élite.",
+      category: "Frontend",
+      image: franVelaImg,
+      technologies: ["Astro", "TypeScript"],
+      demoUrl: "https://franvela.com",
     }
   ],
 };
