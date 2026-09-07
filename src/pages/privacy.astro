@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Privacidad | JPARVEL" description="Política de privacidad de JPARVEL">
+  <Header />
+  <main class="min-h-screen bg-black text-white pt-28 pb-24">
+    <div class="container mx-auto px-6">
+      <h1 class="text-4xl md:text-5xl font-bold text-sw-yellow mb-6 uppercase tracking-wider">Política de Privacidad</h1>
+      <p class="text-gray-300 mb-8 max-w-3xl">
+        Tu confianza es esencial. Esta página explica qué datos se pueden recopilar, cómo se usan y tus derechos sobre ellos.
+      </p>
+
+      <div class="space-y-6 text-gray-300 max-w-4xl">
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Datos que se recopilan</h2>
+          <p>Únicamente la información que compartes al contactarme (nombre, email, mensaje). No se venden ni comparten con terceros.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Uso de la información</h2>
+          <p>Se utiliza para responder a tus solicitudes y mantener comunicación sobre proyectos o servicios.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Cookies y analítica</h2>
+          <p>No se emplean cookies ni herramientas de analítica que identifiquen personalmente.</p>
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-white mb-3">Tus derechos</h2>
+          <p>Puedes solicitar acceso, rectificación o eliminación de tus datos enviando un correo a {`mailto:${"contact@jparvel.com"}`}</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
