@@ -3,6 +3,9 @@
 import portfolioImg from '../images/portfolio.png';
 import naosImg from '../images/NAOS.png';
 import o2Img from '../images/O2.png';
+import franVelaImg from '../images/franvela.png';
+import asetemImg from '../images/asetem.png';
+import jparvelStudioImg from '../images/jparvelstudio.png';
 
 export const siteConfig = {
   name: "JPARVEL",
@@ -43,7 +46,7 @@ export const aboutData = {
   subtitle: "Un Sith del Código",
   description: "Como un Jedi que domina el lado oscuro, he entrenado en las artes del desarrollo web full stack. Mi camino comenzó en el Templo del Código, donde aprendí que con paciencia, práctica y el aprendizaje continuo, cualquier desafío puede ser superado.",
   metadata: {
-    founded: "2026",
+    founded: "2018",
     teamSize: "Analista - Programador",
     location: "Santa Cruz de Tenerife",
   },
@@ -86,7 +89,7 @@ export const experienceData = {
       title: "Middle Full Stack Developer",
       company: "Minsait - Indra",
       project: "NAOS - Junta de Andalucía",
-      description: "Desarrollando soluciones completas de frontend y backend. Creando APIs RESTful y interfaces de usuario responsivas.",
+      description: "Desarrollando soluciones completas de frontend y backend. Creando APIs RESTful e interfaces de usuario responsivas.",
       technologies: ["React", "Next.js", "Javascript", "Java / Springboot"],
     },
     {
@@ -139,12 +142,28 @@ export const projectsData = {
   categories: ["Todas", "Frontend", "Full Stack"],
   projects: [
     {
-      title: "Portfolio JPARVEL",
-      description: "Portfolio personal creado para compartir mis habilidades y experiencia profesional.",
+      title: "Jparvel Studio",
+      description: "Web personal donde se muestra de una manera más comercial todos mis trabajos y se ofrecen colaboraciones concretas a proyectos con un alcance definido.",
       category: "Frontend",
-      image: portfolioImg,
+      image: jparvelStudioImg,
       technologies: ["Astro", "TypeScript"],
-      demoUrl: "#",
+      demoUrl: "https://jparvelstudio.com",
+    },
+    {
+      title: "Asetem Asesoria",
+      description: "Web para una asesoría fiscal, laboral, contable y mercantil, ubicada en Santa Cruz de Tenerife.",
+      category: "Frontend",
+      image: asetemImg,
+      technologies: ["Astro", "TypeScript"],
+      demoUrl: "https://asetemasesoria.com/",
+    },
+    {
+      title: "Web Fran Vela",
+      description: "Portfolio personal del preparador físico Francisco Vela, referente en el fútbol español con una extensa trayectoria en clubes profesionales. La web recoge su carrera, metodología de trabajo, servicios de mentoría para entrenadores y profesionales del deporte, y un espacio donde compartir su conocimiento sobre el rendimiento físico en el fútbol de élite.",
+      category: "Frontend",
+      image: franVelaImg,
+      technologies: ["Astro", "TypeScript"],
+      demoUrl: "https://franvela.com",
     },
     {
       title: "Minsait - Indra - NAOS",
@@ -152,7 +171,7 @@ export const projectsData = {
       category: "Full Stack",
       image: naosImg,
       technologies: ["React.js", "Javascript", "Java / Springboot"],
-      demoUrl: "http://naossuite.juntadeandalucia.es/autogestion",
+      demoUrl: "https://naossuite.juntadeandalucia.es/autogestion",
     },
     {
       title: "Bitbox - O2",
@@ -161,7 +180,15 @@ export const projectsData = {
       image: o2Img,
       technologies: ["React.js", "Javascript", "Java / Springboot"],
       demoUrl: "https://bitboxonline.com/products",
-    }
+    },
+    {
+      title: "Portfolio JPARVEL",
+      description: "Portfolio personal creado para compartir mis habilidades y experiencia profesional.",
+      category: "Frontend",
+      image: portfolioImg,
+      technologies: ["Astro", "TypeScript"],
+      demoUrl: "#",
+    },
   ],
 };
 
