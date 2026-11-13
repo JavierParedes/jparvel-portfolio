@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { projectsData } from '../data/siteData';
 ---
 
@@ -29,9 +30,10 @@ import { projectsData } from '../data/siteData';
           data-category={project.category}
         >
           <div class="relative h-48 bg-black overflow-hidden">
-            <img
-              src={project.image?.src ?? project.image}
+            <Image
+              src={project.image}
               alt={project.title}
+              inferSize
               class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />

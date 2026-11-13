@@ -1,8 +1,7 @@
 ---
 import '../styles/global.css';
-import { siteConfig } from '../data/siteData';
+import { siteConfig, aboutCodeCard } from '../data/siteData';
 import StarField from '../components/StarField.astro';
-import vaderIcon from '../images/darthvadericon.png.png';
 import ogDefault from '../images/portfolio.png';
 
 interface Props {
@@ -14,9 +13,37 @@ interface Props {
 const {
   title = siteConfig.name,
   description = siteConfig.description,
-  ogImage = ogDefault?.src ?? ogDefault,
+  ogImage = ogDefault.src,
 } = Astro.props;
-const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "name": aboutCodeCard.name,
+      "jobTitle": aboutCodeCard.role,
+      "url": Astro.site?.href,
+      "email": `mailto:${siteConfig.email}`,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": aboutCodeCard.headquarters,
+        "addressCountry": "ES",
+      },
+      "sameAs": [siteConfig.social.github, siteConfig.social.linkedin],
+    },
+    {
+      "@type": "WebSite",
+      "name": siteConfig.name,
+      "url": Astro.site?.href,
+      "description": siteConfig.description,
+      "inLanguage": "es",
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -24,21 +51,24 @@ const vaderIconSrc = vaderIcon?.src ?? vaderIcon;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href={vaderIconSrc} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={ogImageURL} />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
   </head>
   <body class="antialiased bg-black text-white overflow-x-hidden">
     <!-- Star Wars starfield background -->

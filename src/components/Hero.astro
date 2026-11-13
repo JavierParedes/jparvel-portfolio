@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { heroData, siteConfig } from '../data/siteData';
 import heroAvatar from '../images/jparvel.png';
 ---
@@ -80,11 +81,13 @@ import heroAvatar from '../images/jparvel.png';
 
         <div class="relative w-[22rem] h-[22rem] md:w-[24rem] md:h-[24rem]">
           <div class="absolute inset-6 rounded-full overflow-hidden border border-sw-yellow/40 shadow-[0_0_12px_rgba(255,232,31,0.2)] bg-transparent">
-            <img
-              src={heroAvatar?.src ?? heroAvatar}
-              alt="Retrato de Javier Parvel"
+            <Image
+              src={heroAvatar}
+              alt="Retrato de Javier Paredes Vela"
+              inferSize
               class="w-full h-full object-contain p-3"
-              loading="lazy"
+              loading="eager"
+              fetchpriority="high"
             />
             <!-- Sombra inferior para que el traje quede detrás del aro -->
             <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90"></div>
