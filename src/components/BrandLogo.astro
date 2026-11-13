@@ -1,0 +1,14 @@
+---
+interface Props {
+  footer?: boolean;
+}
+const { footer = false } = Astro.props;
+---
+
+<span class="brand-lockup">
+  <img src="/logo-dv.svg" alt="" width="56" height="56" class="brand-emblem" loading={footer ? 'lazy' : 'eager'} aria-hidden="true" />
+  <span class="brand-type">
+    <span class="brand-wordmark"><span class="brand-initial">J</span>PARVEL</span>
+    <span class="brand-descriptor">AI Engineering</span>
+  </span>
+</span>

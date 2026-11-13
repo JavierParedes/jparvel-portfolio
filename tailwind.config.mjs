@@ -5,8 +5,8 @@ export default {
     extend: {
       colors: {
         // Star Wars color palette
-        'sw-yellow': '#FFE81F', // Iconic Star Wars yellow/gold
-        'sw-gold': '#FFC500',
+        'sw-yellow': '#e9c764', // Iconic Star Wars yellow/gold
+        'sw-gold': '#d5b156',
         'sw-space': '#0a0e27', // Deep space blue-black
         'sw-dark': '#000000', // Pure black
         'sw-gray': '#1a1f3a', // Dark gray for panels
@@ -17,8 +17,8 @@ export default {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'glow-yellow': '0 0 10px rgba(255, 232, 31, 0.5), 0 0 20px rgba(255, 232, 31, 0.3)',
-        'glow-yellow-strong': '0 0 15px rgba(255, 232, 31, 0.8), 0 0 30px rgba(255, 232, 31, 0.5)',
+        'glow-yellow': '0 0 10px rgba(233, 199, 100, 0.5), 0 0 20px rgba(233, 199, 100, 0.3)',
+        'glow-yellow-strong': '0 0 15px rgba(233, 199, 100, 0.8), 0 0 30px rgba(233, 199, 100, 0.5)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in',
@@ -35,8 +35,8 @@ export default {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         glowPulse: {
-          '0%, 100%': { boxShadow: '0 0 10px rgba(255, 232, 31, 0.5), 0 0 20px rgba(255, 232, 31, 0.3)' },
-          '50%': { boxShadow: '0 0 20px rgba(255, 232, 31, 0.8), 0 0 40px rgba(255, 232, 31, 0.5)' },
+          '0%, 100%': { boxShadow: '0 0 10px rgba(233, 199, 100, 0.5), 0 0 20px rgba(233, 199, 100, 0.3)' },
+          '50%': { boxShadow: '0 0 20px rgba(233, 199, 100, 0.8), 0 0 40px rgba(233, 199, 100, 0.5)' },
         },
       },
     },

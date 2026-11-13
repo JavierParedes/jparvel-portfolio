@@ -1,19 +1,17 @@
 ---
-import { Image } from 'astro:assets';
-import { siteConfig, navigation } from '../data/siteData';
-import vaderIcon from '../images/darthvadericon.png.png';
+import { navigation } from '../data/siteData';
+import BrandLogo from './BrandLogo.astro';
 
 const isHome = Astro.url.pathname === '/';
 const resolveHref = (href: string) =>
   href.startsWith('#') ? (isHome ? href : `/${href}`) : href;
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-sw-yellow/20">
+<header class="tactical-bar fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-sw-yellow/20">
   <nav class="container py-4 px-4 md:px-6">
     <div class="flex items-center justify-between">
-      <a href={resolveHref('#home')} class="flex items-center gap-2 md:gap-3 group">
-        <Image src={vaderIcon} alt="Darth Vader icon" inferSize class="w-12 h-12 md:w-16 md:h-16 drop-shadow-[0_0_8px_rgba(255,232,31,0.5)]" loading="eager" />
-        <span class="font-bold text-base md:text-xl text-sw-yellow tracking-wider text-glow-yellow">{siteConfig.name}</span>
+      <a href={resolveHref('#home')} class="brand-link" aria-label="JPARVEL — Inicio">
+        <BrandLogo />
       </a>
 
       <div class="hidden lg:flex items-center gap-2">
@@ -27,10 +25,14 @@ const resolveHref = (href: string) =>
         ))}
       </div>
 
+      <slot name="controls" />
+
       <button
         id="mobile-menu-btn"
         class="lg:hidden p-2 text-sw-yellow hover:text-sw-gold transition-colors"
         aria-label="Toggle menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -57,11 +59,45 @@ const resolveHref = (href: string) =>
 
   menuBtn?.addEventListener('click', () => {
     mobileMenu?.classList.toggle('hidden');
+    menuBtn?.setAttribute('aria-expanded', String(!mobileMenu?.classList.contains('hidden')));
   });
 
   mobileMenu?.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu?.classList.add('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'false');
     });
   });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !mobileMenu?.classList.contains('hidden')) {
+      mobileMenu?.classList.add('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'false');
+      menuBtn?.focus();
+    }
+  });
+  let sectionObserver: IntersectionObserver;
+  const observeSections = () => {
+    sectionObserver?.disconnect();
+    const height = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 97;
+    sectionObserver = new IntersectionObserver((entries) => {
+    const entry = entries.find((item) => item.isIntersecting);
+    if (!entry) return;
+    document.querySelectorAll('header nav a:not(.brand-link)').forEach((link) => {
+      if (link.getAttribute('href') === `#${entry.target.id}`) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+    }, { rootMargin: `-${height}px 0px -${Math.max(0, window.innerHeight - height - 100)}px 0px`, threshold: 0 });
+    document.querySelectorAll('main > section').forEach((section) => sectionObserver.observe(section));
+  };
+  observeSections();
+  window.addEventListener('resize', observeSections);
+  const header = document.querySelector('header');
+  const headerObserver = new ResizeObserver(() => {
+    // The collapsed bar height is stable even while the mobile menu is open.
+    const bar = header?.querySelector('nav > div');
+    if (bar) document.documentElement.style.setProperty('--header-height', `${bar.getBoundingClientRect().height + 33}px`);
+  });
+  if (header) headerObserver.observe(header);
+  window.addEventListener('pagehide', () => { sectionObserver.disconnect(); headerObserver.disconnect(); window.removeEventListener('resize', observeSections); }, { once: true });
 </script>

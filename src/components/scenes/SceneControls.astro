@@ -1,0 +1,51 @@
+<button
+  id="scene-effects-toggle"
+  class="scene-toggle"
+  type="button"
+  aria-pressed="false"
+  aria-label="Reducir efectos"
+  title="Reducir efectos"
+>
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+    <circle cx="12" cy="12" r="8.5"></circle>
+    <path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"></path>
+  </svg>
+  <span class="scene-toggle-label">Reducir efectos</span>
+</button>
+
+<script>
+  const STORAGE_KEY = 'jparvel:scene-reduced';
+  const button = document.getElementById('scene-effects-toggle') as HTMLButtonElement | null;
+  const label = button?.querySelector('.scene-toggle-label');
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  let userReduced = false;
+  try {
+    userReduced = localStorage.getItem(STORAGE_KEY) === 'true';
+  } catch {
+    /* Storage may be unavailable. */
+  }
+
+  const update = () => {
+    if (!button) return;
+    const reduced = userReduced || motion.matches;
+    const text = reduced ? 'Activar efectos' : 'Reducir efectos';
+    button.setAttribute('aria-pressed', String(reduced));
+    button.setAttribute('aria-label', text);
+    button.title = motion.matches ? 'Efectos reducidos por la preferencia del sistema' : text;
+    button.disabled = motion.matches;
+    if (label) label.textContent = text;
+  };
+
+  button?.addEventListener('click', () => {
+    userReduced = !userReduced;
+    try {
+      localStorage.setItem(STORAGE_KEY, String(userReduced));
+    } catch {
+      /* Keep the preference for this visit only. */
+    }
+    update();
+    window.dispatchEvent(new CustomEvent('scene:effects', { detail: { reduced: userReduced } }));
+  });
+  motion.addEventListener('change', update);
+  update();
+</script>

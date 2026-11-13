@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/scenes.css';
 import { siteConfig, aboutCodeCard } from '../data/siteData';
 import StarField from '../components/StarField.astro';
 import ogDefault from '../images/portfolio.png';
@@ -8,9 +9,11 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  background?: 'scenes' | 'stars';
 }
 
 const {
+  background = 'stars',
   title = siteConfig.name,
   description = siteConfig.description,
   ogImage = ogDefault.src,
@@ -70,76 +73,19 @@ const jsonLd = {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
   </head>
-  <body class="antialiased bg-black text-white overflow-x-hidden">
+  <body data-background={background} class="antialiased bg-black text-white overflow-x-hidden">
     <!-- Star Wars starfield background -->
-    <StarField />
+    {background === 'stars' && <StarField />}
+
+    <slot name="background" />
 
     <!-- Main content with z-index above starfield -->
-    <div class="relative z-10 snap-container">
+    <div class="relative z-10 site-content">
       <slot />
     </div>
 
-    <style>
-      html {
-        scroll-behavior: smooth;
-        scroll-snap-type: y mandatory;
-      }
-
-      body {
-        overflow-y: scroll;
-        overflow-x: hidden;
-      }
-
-      .snap-container section {
-        scroll-snap-align: start;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: relative;
-      }
-    </style>
-
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        const sections = document.querySelectorAll('main > section');
-        let ticking = false;
-
-        function updateParallax() {
-          sections.forEach((section) => {
-            const rect = section.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            const elementCenter = rect.top + rect.height / 2;
-            const windowCenter = windowHeight / 2;
-
-            // Calculate distance from center (-1 to 1)
-            const distanceFromCenter = (windowCenter - elementCenter) / windowHeight;
-
-            // Apply stronger parallax effect (increased from 20 to 80)
-            const parallaxOffset = distanceFromCenter * 80;
-
-            // Apply scale effect for more depth
-            const scale = 1 - Math.abs(distanceFromCenter) * 0.1;
-
-            (section as HTMLElement).style.transform = `translateY(${parallaxOffset}px) scale(${scale})`;
-            (section as HTMLElement).style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-          });
-
-          ticking = false;
-        }
-
-        function onScroll() {
-          if (!ticking) {
-            window.requestAnimationFrame(updateParallax);
-            ticking = true;
-          }
-        }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        // Initial call
-        updateParallax();
-
         // Animar barras solo cuando entren en viewport
         const animatedBars = document.querySelectorAll('.progress-animated, .progress-fill, .skill-bar');
         const observer = new IntersectionObserver(

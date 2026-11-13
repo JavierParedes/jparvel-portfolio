@@ -1,0 +1,76 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { scenes } from '../../data/scenes';
+import { sceneImage } from '../../data/sceneImages';
+
+// Portrait screens (phones, portrait tablets) receive the vertical composition.
+const PORTRAIT = '(max-aspect-ratio: 4/5)';
+
+async function sources(image: ImageMetadata | undefined, widths: number[]) {
+  if (!image) return undefined;
+  // Never upscale; always offer the original width as the sharpest candidate.
+  const list = [...new Set([...widths.filter((width) => width < image.width), image.width])];
+  const [avif, webp] = await Promise.all([
+    getImage({ src: image, widths: list, format: 'avif', quality: 72 }),
+    getImage({ src: image, widths: list, format: 'webp', quality: 82 }),
+  ]);
+  return { avif: avif.srcSet.attribute, webp: webp.srcSet.attribute, fallback: webp.src };
+}
+
+const layers = await Promise.all(
+  scenes.map(async (scene, index) => ({
+    ...scene,
+    index,
+    desktop: await sources(sceneImage(scene.file, 'desktop'), [960, 1440, 1920, 2560]),
+    mobile: await sources(sceneImage(scene.file, 'mobile'), [540, 828, 1080, 1440]),
+  })),
+);
+---
+
+<div class="scene-backdrop" id="scene-backdrop" aria-hidden="true">
+  {
+    layers.map((layer) => {
+      const eager = layer.index === 0;
+      // Only the first scene is requested on load; the rest are activated by the director.
+      const set = eager ? 'srcset' : 'data-srcset';
+      const desktop = layer.desktop ?? layer.mobile;
+      const mobile = layer.mobile ?? layer.desktop;
+      return (
+        <div
+          class="scene-layer"
+          data-scene={layer.section}
+          data-active={eager ? 'true' : 'false'}
+          style={`--focus-x: ${layer.focusX}%; --focus-y: ${layer.focusY}%;`}
+        >
+          {desktop && mobile ? (
+            <picture>
+              <source media={PORTRAIT} type="image/avif" {...{ [set]: mobile.avif }} sizes="100vw" />
+              <source media={PORTRAIT} type="image/webp" {...{ [set]: mobile.webp }} sizes="100vw" />
+              <source type="image/avif" {...{ [set]: desktop.avif }} sizes="100vw" />
+              <img
+                {...{ [eager ? 'src' : 'data-src']: desktop.fallback }}
+                {...{ [set]: desktop.webp }}
+                sizes="100vw"
+                alt=""
+                decoding="async"
+                fetchpriority={eager ? 'high' : 'low'}
+              />
+            </picture>
+          ) : (
+            <div class="scene-fallback" />
+          )}
+        </div>
+      );
+    })
+  }
+  <div class="scene-shade"></div>
+  <div class="scene-dip"></div>
+  <canvas class="scene-effects" id="scene-effects"></canvas>
+</div>
+
+<script>
+  import { startSceneDirector } from '../../scripts/sceneDirector';
+
+  startSceneDirector();
+</script>

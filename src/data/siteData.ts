@@ -1,6 +1,5 @@
 // Site configuration and content data
 // All content is centralized here for easy updates
-import portfolioImg from '../images/portfolio.png';
 import naosImg from '../images/NAOS.png';
 import o2Img from '../images/O2.png';
 import franVelaImg from '../images/franvela.png';
@@ -11,7 +10,7 @@ export const siteConfig = {
   name: "JPARVEL",
   logo: "DV",
   tagline: "La Fuerza Oscura del Desarrollo Web",
-  description: "Desarrollador Full Stack explorando la galaxia del código con tecnologías modernas. Que la Fuerza te acompañe en tu próximo proyecto.",
+  description: "Forward Deployed AI Engineer explorando la galaxia de la inteligencia artificial. Del reto de negocio a soluciones de IA en producción.",
   email: "contact@jparvel.com",
   address: "Una galaxia muy, muy lejana",
   social: {
@@ -23,39 +22,38 @@ export const siteConfig = {
 export const navigation = [
   { name: "Inicio", href: "#home" },
   { name: "Sobre Mí", href: "#about" },
+  { name: "Experiencia", href: "#experience" },
   { name: "Habilidades", href: "#services" },
   { name: "Misiones", href: "#projects" },
   { name: "Contacto", href: "#contact" },
 ];
 
 export const heroData = {
-  titleHighlight: "Desarrollador",
-  titleMain: "Full Stack",
-  subtitle: "Navegando por la galaxia del código, construyendo aplicaciones web que trascienden el hiperespacio. Del lado oscuro del desarrollo vengo.",
+  titleHighlight: "Forward Deployed",
+  titleMain: "AI Engineer",
+  subtitle: "Transformo retos de negocio en soluciones de inteligencia artificial. Agentes, LLMs y desarrollo full stack para llevar cada misión del prototipo a producción. Más de 4 años de experiencia en la galaxia del código.",
   primaryCta: { text: "Ver Misiones", href: "#projects" },
   secondaryCta: { text: "Contacto", href: "#contact" },
   floatingLetters: ["⚡", "★", "⬡", "◆", "✦", "⬢", "✧", "◇"],
-  skills: [
-    { name: "Frontend Development", percentage: 90 },
-    { name: "Backend Development", percentage: 70 },
-  ],
 };
 
 export const aboutData = {
   title: "Sobre Mí",
   subtitle: "Un Sith del Código",
-  description: "Como un Jedi que domina el lado oscuro, he entrenado en las artes del desarrollo web full stack. Mi camino comenzó en el Templo del Código, donde aprendí que con paciencia, práctica y el aprendizaje continuo, cualquier desafío puede ser superado.",
+  description: "Como Forward Deployed AI Engineer, conecto necesidades de negocio con soluciones de inteligencia artificial. Combino más de 4 años de experiencia en desarrollo full stack con agentes, LLMs e integración de datos para llevar cada misión a producción.",
   metadata: {
     founded: "2018",
     teamSize: "Analista - Programador",
     location: "Santa Cruz de Tenerife",
   },
-  mission: "Construir experiencias web extraordinarias que lleven a los usuarios más allá de la galaxia, combinando diseño elegante con código limpio y eficiente.",
+  mission: "Trabajar cerca del cliente para transformar retos reales en soluciones de IA útiles: entender el problema, construir prototipos, integrar datos y desplegar aplicaciones fiables con impacto medible. Que la Fuerza acompañe a cada misión, del primer prompt a producción.",
   skills: [
-    { name: "React", percentage: 80 },
-    { name: "Java / SpringBoot", percentage: 70 },
-    { name: "Next.js", percentage: 70 },
-    { name: "Astro & Tailwind", percentage: 70 },
+    { name: "LLMs & Prompt Engineering", percentage: 96 },
+    { name: "Agentes de IA & Automatización", percentage: 95 },
+    { name: "RAG & Integración de Datos", percentage: 93 },
+    { name: "Desarrollo Full Stack & APIs", percentage: 95 },
+    { name: "Despliegue, Evaluación & Observabilidad", percentage: 90 },
+    { name: "Soluciones de Negocio & Colaboración con Clientes", percentage: 94 },
   ],
   timeline: [
     { year: "2018", title: "Inicio del Entrenamiento", description: "Primeros pasos como Padawan del desarrollo" },
@@ -66,18 +64,18 @@ export const aboutData = {
   stats: [
     { value: "10K+", label: "Noches sin dormir" },
     { value: "50K+", label: "Líneas de Código" },
-    { value: "3+", label: "Años de Experiencia" },
+    { value: "4+", label: "Años de Experiencia" },
     { value: "∞", label: "Tazas de Café" },
   ],
 };
 
 export const aboutCodeCard = {
   name: "Javier Paredes Vela",
-  role: "Full Stack Developer",
+  role: "Forward Deployed AI Engineer",
   founded: 1988,
   headquarters: "Santa Cruz de Tenerife",
-  specialties: ["Frontend", "Backend", "UI/UX"],
-  industries: ["Web Developer", "SEO"],
+  specialties: ["AI Agents", "LLMs", "RAG"],
+  industries: ["Full Stack", "Applied AI"],
 };
 
 export const experienceData = {
@@ -86,7 +84,7 @@ export const experienceData = {
   experiences: [
     {
       year: "2025 - Presente",
-      title: "Middle Full Stack Developer",
+      title: "Developer Full Stack",
       company: "Minsait - Indra",
       project: "NAOS - Junta de Andalucía",
       description: "Desarrollando soluciones completas de frontend y backend. Creando APIs RESTful e interfaces de usuario responsivas.",
@@ -94,7 +92,7 @@ export const experienceData = {
     },
     {
       year: "2023 - 2025",
-      title: "Junior Full Stack Developer",
+      title: "Developer Full Stack",
       company: "Bitbox",
       project: "O2",
       description: "Retomando mi viaje en el desarrollo web. Fortaleciendo las bases del frontend y backend, participando en el proyecto solucionando bugs, analizando nuevas funcionalidades y realizando nuevos desarrollos.",
@@ -106,8 +104,14 @@ export const experienceData = {
 export const servicesData = {
   title: "Tecnologías",
   subtitle: "Habilidades de un Maestro Sith",
-  description: "Las herramientas que domino en mi viaje por la galaxia del desarrollo web.",
+  description: "Las herramientas que conectan desarrollo full stack e inteligencia artificial para llevar cada misión a producción.",
   services: [
+    {
+      icon: "astromech",
+      title: "Artificial Intelligence",
+      description: "Como un droide astromecánico que resuelve cada misión, conecto modelos, datos y herramientas para crear asistentes inteligentes y automatizar procesos reales. Del prototipo al despliegue, con evaluación continua y foco en el negocio.",
+      features: ["LLMs & Prompt Engineering", "Agentes de IA & Tool Calling", "RAG & Bases de Datos Vectoriales", "Automatización & APIs", "Evaluación & Observabilidad"],
+    },
     {
       icon: "brain",
       title: "Frontend Development",
@@ -181,19 +185,11 @@ export const projectsData = {
       technologies: ["React.js", "Javascript", "Java / Springboot"],
       demoUrl: "https://bitboxonline.com/products",
     },
-    {
-      title: "Portfolio JPARVEL",
-      description: "Portfolio personal creado para compartir mis habilidades y experiencia profesional.",
-      category: "Frontend",
-      image: portfolioImg,
-      technologies: ["Astro", "TypeScript"],
-      demoUrl: "#",
-    },
   ],
 };
 
 export const footerData = {
-  description: "Desarrollador Full Stack navegando por la galaxia del código. Que la Fuerza te acompañe en tu próximo proyecto.",
+  description: "Forward Deployed AI Engineer navegando por la galaxia de la inteligencia artificial. Que la Fuerza te acompañe en tu próximo proyecto.",
   links: [
     { name: "Inicio", href: "#home" },
     { name: "Sobre Mí", href: "#about" },

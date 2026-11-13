@@ -8,12 +8,15 @@ import Services from '../components/Services.astro';
 import Projects from '../components/Projects.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import SceneBackdrop from '../components/scenes/SceneBackdrop.astro';
 ---
 
 <Layout
-  title="JPARVEL | Javier Paredes Vela — Desarrollador Full Stack en Tenerife"
-  description="Javier Paredes Vela, desarrollador Full Stack en Santa Cruz de Tenerife especializado en React, Next.js, Java/Spring Boot y Astro. Descubre mis proyectos y experiencia profesional."
+  background="scenes"
+  title="JPARVEL | Javier Paredes Vela — Forward Deployed AI Engineer en Tenerife"
+  description="Javier Paredes Vela, Forward Deployed AI Engineer en Santa Cruz de Tenerife. Más de 4 años de experiencia en desarrollo full stack, agentes de IA, LLMs y RAG."
 >
+  <SceneBackdrop slot="background" />
   <Header />
   <main>
     <Hero />

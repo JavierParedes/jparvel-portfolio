@@ -1,0 +1,1215 @@
+/* ==========================================================================
+   Scenes + HUD
+   The home page sits over a fixed, full-screen cinematic backdrop (one scene
+   per section). Each section opens with a full-frame shot and a title caption;
+   its content follows in full-width HUD panels while the scene dims behind.
+   ========================================================================== */
+
+:root {
+  --header-height: 97px;
+  --hud-bg-strong: rgb(4 7 13 / 0.96);
+  --hud-line: rgb(233 199 100 / 0.16);
+  --hud-line-strong: rgb(233 199 100 / 0.55);
+  --hud-text: #e6e8ec;
+  --hud-text-dim: #a9b1bd;
+  --hud-radius: 2px;
+  --gutter: max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem));
+  --hud-bg: rgb(5 9 16 / 0.86);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+section[id] {
+  scroll-margin-top: var(--header-height);
+}
+
+:is(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-sw-yellow) !important;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tactical bar (header, all pages)
+   -------------------------------------------------------------------------- */
+
+.tactical-bar {
+  backdrop-filter: none;
+  background: #05090f;
+  border-bottom: 1px solid rgb(233 199 100 / 0.3);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+}
+
+.brand-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-emblem {
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.brand-type {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.brand-wordmark {
+  color: #f1f0eb;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.16em;
+}
+
+.brand-initial {
+  color: #e9c764;
+}
+
+.brand-descriptor {
+  color: #b9a66f;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.23em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+  .brand-lockup {
+    gap: 0.6rem;
+  }
+
+  .brand-emblem {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .brand-wordmark {
+    font-size: 1.05rem;
+  }
+}
+
+.tactical-bar nav a {
+  border-radius: 0;
+  text-shadow: none;
+}
+
+.tactical-bar nav a:not(.brand-link)[aria-current='true'] {
+  color: var(--color-sw-yellow);
+  background: rgb(233 199 100 / 0.08);
+  box-shadow: inset 0 -2px var(--color-sw-yellow);
+}
+
+.tactical-bar nav > div:first-child {
+  gap: 0.5rem;
+}
+
+.tactical-bar nav > div:first-child > a:first-child {
+  margin-right: auto;
+}
+
+#mobile-menu-btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.scene-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  margin-left: 0.5rem;
+  color: var(--color-sw-yellow);
+  background: transparent;
+  border: 1px solid var(--hud-line);
+  border-radius: var(--hud-radius);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.scene-toggle:hover {
+  border-color: var(--hud-line-strong);
+  background: rgb(233 199 100 / 0.06);
+}
+
+.scene-toggle:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.scene-toggle[aria-pressed='true'] svg {
+  opacity: 0.55;
+}
+
+/* The label is visible only where there is room for it. */
+.scene-toggle-label {
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  .scene-toggle-label {
+    display: inline;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop
+   -------------------------------------------------------------------------- */
+
+.scene-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Match the images' black space so contain never exposes a coloured strip. */
+  background: #000;
+}
+
+.scene-layer {
+  position: absolute;
+  /* Start below the opaque tactical bar so no part of the shot hides behind it. */
+  inset: var(--header-height) 0 0 0;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  transform: none;
+  transform-origin: var(--focus-x) var(--focus-y);
+}
+
+.scene-layer[data-active='true'] {
+  visibility: visible;
+}
+
+/* Without JavaScript the first scene stays on screen. */
+.scene-layer:first-child {
+  opacity: 1;
+}
+
+.scene-layer picture,
+.scene-layer img,
+.scene-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-layer img {
+  object-fit: contain;
+  object-position: var(--focus-x) var(--focus-y);
+  /* Clip the near-black image background to the same black as the outer space. */
+  filter: contrast(1.05);
+}
+
+/* Normal landscape screens fill the frame from the top. Taller and ultrawide
+   screens retain the complete shot, with the starfield filling the spare space. */
+@media (min-aspect-ratio: 4/3) and (max-aspect-ratio: 21/9) {
+  .scene-layer img {
+    object-fit: cover;
+  }
+}
+
+.scene-effects {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Brief darkening that marks each change of shot. */
+.scene-dip {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+}
+
+/* Full-screen dim (raised by the director while content is being read) and vignette. */
+.scene-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 85% 80% at 50% 45%, transparent 55%, rgb(2 4 9 / 0.6) 100%),
+    rgb(2 4 9 / var(--scene-dim, 0.1));
+}
+
+@media (max-aspect-ratio: 4/5) {
+  .scene-layer {
+    transform-origin: 50% var(--focus-y);
+    transform: scale(1.08);
+  }
+
+  .scene-layer img {
+    /* Fill the width without letting a tall screen crop the wings or engines. */
+    height: auto;
+    object-position: 50% var(--focus-y);
+  }
+}
+
+body[data-background='scenes'] .site-content {
+  z-index: 2;
+}
+
+/* --------------------------------------------------------------------------
+   Section rhythm: full-frame intro shot, then full-width content
+   -------------------------------------------------------------------------- */
+
+.scene-section {
+  position: relative;
+}
+
+.scene-intro {
+  /* One screen below the tactical bar: a section reached from the menu shows its whole shot. */
+  min-height: calc(100svh - var(--header-height));
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem var(--gutter) 12vh;
+}
+
+.scene-content {
+  width: min(77rem, calc(100% - 3rem));
+  margin-inline: auto;
+  display: grid;
+  gap: 1.5rem;
+  padding-bottom: 12vh;
+}
+
+.scene-section:last-child .scene-content {
+  padding-bottom: 18vh;
+}
+
+.scene-section--hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--header-height) + 2rem) var(--gutter) 10vh;
+}
+
+.scene-hero {
+  width: min(48rem, 100%);
+}
+
+.hud-stack {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .hud-stack--about {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    align-items: start;
+  }
+
+  .hud-stack--about .hud-stats {
+    grid-column: 1 / -1;
+  }
+
+  .hud-stack--contact {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+
+  .hud-stack--contact .hud-comms-channels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .scene-intro {
+    padding: 1rem 1rem 8vh;
+  }
+
+  .scene-content {
+    width: calc(100% - 2rem);
+  }
+
+  .scene-section--hero {
+    padding: calc(var(--header-height) + 1rem) 1rem 4vh;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-height: 81px;
+  }
+
+}
+
+@media (max-aspect-ratio: 4/5) {
+  /* Keep the planet and fleet visible above the card on phones and portrait tablets. */
+  .scene-section--hero {
+    padding-top: calc(var(--header-height) + 56svh);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Plates
+   -------------------------------------------------------------------------- */
+
+.hud-plate {
+  position: relative;
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-line);
+  border-radius: var(--hud-radius);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.04),
+    0 20px 50px rgb(0 0 0 / 0.35);
+}
+
+/* Corner brackets, the visual signature of every panel. */
+.hud-plate::before,
+.hud-plate::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--hud-line-strong);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.hud-plate::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.hud-plate::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+/* Title caption over the full-frame shot, like a film title card. */
+.hud-caption {
+  max-width: min(46rem, 100%);
+  padding: 1.5rem 2.5rem 1.5rem 1.5rem;
+  border-left: 2px solid var(--color-sw-yellow);
+  background: linear-gradient(90deg, rgb(2 4 9 / 0.82), rgb(2 4 9 / 0.55) 70%, transparent);
+}
+
+.hud-caption .hud-title {
+  /* Bounded by width and height so the caption always fits inside the intro shot. */
+  font-size: clamp(1.6rem, min(5.6vw, 8.5vh), 4.75rem);
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.6);
+}
+
+/* Short screens (phones in landscape): a compact caption that never overflows the shot. */
+@media (max-height: 520px) {
+  .scene-intro {
+    padding-top: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  .hud-caption {
+    padding: 0.85rem 1.5rem 0.85rem 1rem;
+  }
+
+  .hud-caption .hud-subtitle {
+    margin-top: 0.35rem;
+    font-size: 0.95rem;
+  }
+
+  .hud-caption .hud-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+}
+
+.hud-caption .hud-subtitle {
+  padding-left: 0;
+  border-left: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+}
+
+.hud-title {
+  font-size: clamp(1.75rem, 3.6vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hud-subtitle {
+  margin-top: 0.75rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--color-sw-yellow);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--color-sw-yellow);
+}
+
+.hud-caption .hud-text {
+  margin-top: 1rem;
+  max-width: 40rem;
+}
+
+.hud-text {
+  color: var(--hud-text);
+  line-height: 1.7;
+}
+
+.hud-text--small {
+  font-size: 0.925rem;
+}
+
+.hud-kicker,
+.hud-block-title,
+.hud-readout-label,
+.hud-channel-label,
+.hud-field label,
+.hud-stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hud-kicker {
+  color: var(--color-sw-yellow);
+  margin-bottom: 1rem;
+}
+
+.hud-block-title {
+  color: #fff;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hud-block-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hud-line-strong), transparent);
+}
+
+.hud-body,
+.hud-code,
+.hud-comms,
+.hud-terminal {
+  padding: 1.75rem;
+}
+
+.hud-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-sw-yellow);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hud-card-company {
+  margin-top: 0.35rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.hud-card-meta {
+  margin: 0.25rem 0 0.75rem;
+  font-style: italic;
+  color: rgb(233 199 100 / 0.8);
+}
+
+.hud-badge {
+  display: inline-block;
+  padding: 0.3rem 0.65rem;
+  background: var(--color-sw-yellow);
+  color: #000;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hud-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.hud-chip {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--hud-line-strong);
+  color: var(--color-sw-yellow);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.hud-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.hud-tag {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--hud-line);
+  background: rgb(233 199 100 / 0.06);
+  color: var(--color-sw-yellow);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.hud-link {
+  color: var(--color-sw-yellow);
+  text-decoration: underline;
+  text-decoration-color: rgb(233 199 100 / 0.35);
+  text-underline-offset: 3px;
+}
+
+.hud-link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.hud-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.hud-button--primary {
+  background: var(--color-sw-yellow);
+  color: #000;
+}
+
+.hud-button--primary:hover {
+  background: var(--color-sw-gold);
+}
+
+.hud-button--ghost {
+  color: var(--color-sw-yellow);
+  background: rgb(233 199 100 / 0.08);
+  box-shadow: inset 0 0 0 2px rgb(233 199 100 / 0.55);
+}
+
+.hud-button--ghost:hover {
+  background: rgb(233 199 100 / 0.18);
+}
+
+.hud-button--small {
+  min-height: 40px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.hud-button--block {
+  width: 100%;
+}
+
+.hud-button:focus-visible {
+  clip-path: none;
+}
+
+.hud-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--color-sw-yellow);
+  transition: color 0.2s;
+}
+
+.hud-icon-link:hover {
+  color: var(--color-sw-gold);
+}
+
+.hud-icon-link--boxed {
+  border: 1px solid var(--hud-line);
+  color: var(--hud-text);
+}
+
+.hud-icon-link--boxed:hover {
+  border-color: var(--hud-line-strong);
+  color: var(--color-sw-yellow);
+}
+
+/* --------------------------------------------------------------------------
+   Readouts (skill meters)
+   -------------------------------------------------------------------------- */
+
+.hud-readouts {
+  display: grid;
+  gap: 1rem;
+}
+
+.hud-readout-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.hud-readout-label {
+  color: var(--color-sw-yellow);
+}
+
+.hud-readout-value {
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-meter {
+  height: 6px;
+  background: rgb(255 255 255 / 0.08);
+  overflow: hidden;
+}
+
+.hud-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-sw-gold), var(--color-sw-yellow));
+  box-shadow: 0 0 10px rgb(233 199 100 / 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   Hero: identification screen
+   -------------------------------------------------------------------------- */
+
+.hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  column-gap: 2rem;
+  row-gap: 1.5rem;
+  align-items: start;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--hud-bg-strong);
+}
+
+.hero-title {
+  grid-column: 1 / -1;
+  font-size: clamp(1.5rem, 3.3vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.hero-lead {
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--hud-text);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hero-social {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  margin-left: -0.6rem;
+}
+
+.hero-id {
+  display: grid;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 15rem;
+  justify-self: end;
+  padding: 1rem;
+  border: 1px solid var(--hud-line);
+  background: rgb(255 255 255 / 0.02);
+}
+
+.hero-portrait {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgb(233 199 100 / 0.45);
+  box-shadow: 0 0 0 6px rgb(233 199 100 / 0.06);
+  background: radial-gradient(circle at 50% 35%, rgb(233 199 100 / 0.12), transparent 70%);
+}
+
+.hero-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+@media (max-width: 1023px) {
+  .hero-card {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-id {
+    grid-row: 2;
+    max-width: 12rem;
+    justify-self: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   About
+   -------------------------------------------------------------------------- */
+
+.hud-code-body {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: #d5d9e0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+@media (max-width: 639px) {
+  .hud-code {
+    padding: 1.25rem 1rem;
+  }
+
+  .hud-code-body {
+    font-size: 0.7rem;
+  }
+}
+
+.hud-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.hud-stat {
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.hud-stat-value {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-sw-yellow);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-stat-label {
+  margin-top: 0.35rem;
+  color: var(--hud-text-dim);
+  font-size: 0.68rem;
+}
+
+@media (max-width: 639px) {
+  .hud-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Experience: service log
+   -------------------------------------------------------------------------- */
+
+.hud-timeline {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  padding-left: 2rem;
+}
+
+.hud-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.45rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: linear-gradient(180deg, var(--color-sw-yellow), rgb(233 199 100 / 0.1));
+}
+
+.hud-timeline-item {
+  position: relative;
+}
+
+.hud-timeline-dot {
+  position: absolute;
+  left: -2rem;
+  top: 1.75rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--color-sw-yellow);
+  background: #02040a;
+  transform: rotate(45deg);
+}
+
+.experience-card {
+  padding: 1.5rem 1.75rem;
+}
+
+.experience-card .hud-badge {
+  margin-bottom: 0.85rem;
+}
+
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  html:not([data-scene-reduced='true']) .experience-item {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  html:not([data-scene-reduced='true']) .experience-item.visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Services and Projects grids
+   -------------------------------------------------------------------------- */
+
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (min-width: 1200px) {
+  #services .hud-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #projects .hud-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .hud-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hud-timeline {
+  width: min(60rem, 100%);
+  justify-self: center;
+}
+
+.hud-system {
+  padding: 1.5rem;
+}
+
+.hud-system--ai {
+  border-color: var(--hud-line-strong);
+  background: linear-gradient(135deg, rgb(233 199 100 / 0.07), transparent 65%), var(--hud-bg);
+}
+
+@media (min-width: 768px) {
+  .hud-system--ai {
+    grid-column: span 2;
+  }
+
+  .hud-system--ai .hud-checklist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hud-system-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--hud-line-strong);
+  background: rgb(233 199 100 / 0.05);
+}
+
+.hud-system-icon-img {
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(84%) sepia(51%) saturate(491%) hue-rotate(356deg)
+    brightness(95%) contrast(92%);
+}
+
+.hud-system .hud-text {
+  margin: 0.75rem 0 1rem;
+}
+
+.hud-checklist {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.hud-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--hud-text);
+}
+
+.hud-checklist svg {
+  color: var(--color-sw-yellow);
+}
+
+.hud-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hud-filter {
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--hud-line);
+  background: var(--hud-bg);
+  color: var(--hud-text-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.hud-filter:hover {
+  color: var(--color-sw-yellow);
+  border-color: var(--hud-line-strong);
+}
+
+.hud-filter[data-active='true'] {
+  background: var(--color-sw-yellow);
+  border-color: var(--color-sw-yellow);
+  color: #000;
+}
+
+.hud-mission {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.hud-mission-screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid var(--hud-line-strong);
+  background: #000;
+}
+
+/* Faint scanlines make the screenshot read as a tactical display. */
+.hud-mission-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.12) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+.hud-mission-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s ease;
+}
+
+.hud-mission:hover .hud-mission-img {
+  transform: scale(1.04);
+}
+
+.hud-mission-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1;
+}
+
+.hud-mission-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.hud-mission-body .hud-text {
+  margin-top: 0.6rem;
+}
+
+.hud-mission-body .hud-button {
+  margin-top: auto;
+}
+
+.hud-mission-body .hud-chips {
+  margin-bottom: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Contact: comms terminal
+   -------------------------------------------------------------------------- */
+
+.hud-comms-channels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.hud-channel {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.hud-channel--social {
+  gap: 0.5rem;
+}
+
+.hud-channel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--hud-line-strong);
+  color: var(--color-sw-yellow);
+}
+
+.hud-channel-label {
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.hud-channel .hud-link {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .hud-comms-channels {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hud-terminal {
+  background: var(--hud-bg-strong);
+}
+
+.hud-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.hud-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 639px) {
+  .hud-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hud-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--hud-text-dim);
+}
+
+.hud-field :is(input, textarea) {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: #02050a;
+  border: 1px solid rgb(233 199 100 / 0.25);
+  border-radius: 0;
+  color: #fff;
+  transition: border-color 0.2s;
+}
+
+.hud-field textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.hud-field :is(input, textarea)::placeholder {
+  color: #7d8591;
+}
+
+.hud-field :is(input, textarea):focus {
+  border-color: var(--color-sw-yellow);
+}
+
+/* --------------------------------------------------------------------------
+   Footer as terminal strip (home only)
+   -------------------------------------------------------------------------- */
+
+body[data-background='scenes'] footer {
+  position: relative;
+  background: rgb(3 6 11 / 0.96);
+  border-top: 1px solid rgb(233 199 100 / 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+  }
+}
+
+html[data-scene-reduced='true'] .hud-mission-img {
+  transition: none;
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="#e9c764" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <title>Droide astromecánico de inteligencia artificial inspirado en Star Wars</title>
+  <path d="M28 39V31a20 20 0 0 1 40 0v8M28 39h40v39H28zM28 32h40"/>
+  <path d="M28 46H17v29l-5 8h16M68 46h11v29l5 8H68M43 78v7h10v-7M12 83h16M68 83h16"/>
+  <circle cx="48" cy="23" r="4"/>
+  <path d="M35 23h3M58 23h3M37 40v9h22v-9M38 67h20M38 73h20"/>
+  <rect x="41" y="53" width="14" height="9" rx="2"/>
+  <path d="m79 9 2 6 6 2-6 2-2 6-2-6-6-2 6-2zM14 27v8M10 31h8"/>
+</svg>
